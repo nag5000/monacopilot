@@ -4,7 +4,9 @@ import {
   EditorCancellationToken,
   EditorModel,
   EditorRange,
+  InlineCompletionContext,
   Monaco,
+  SelectedSuggestionInfo,
 } from './monaco';
 
 export type Endpoint = string;
@@ -128,6 +130,7 @@ export interface InlineCompletionHandlerParams {
   monaco: Monaco;
   mdl: EditorModel;
   pos: CursorPosition;
+  ctx: InlineCompletionContext;
   token: EditorCancellationToken;
 
   isCompletionAccepted: boolean;
@@ -226,6 +229,10 @@ export interface CompletionMetadata {
    */
   cursorPosition: CursorPosition;
   /**
+   * The text of the selected suggestion, if the Suggestion Widget is open.
+   */
+  selectedSuggestionText: string | undefined;
+  /**
    * The current state of the editor.
    */
   editorState: {
@@ -255,12 +262,14 @@ export interface FetchCompletionItemParams {
 export interface ConstructCompletionMetadataParams {
   mdl: EditorModel;
   pos: CursorPosition;
+  ctx: InlineCompletionContext;
   options: RegisterCompletionOptions;
 }
 
 export interface CompletionCacheItem {
   completion: string;
   range: EditorRange;
+  selectedSuggestionInfo: SelectedSuggestionInfo | undefined;
   textBeforeCursor: string;
   textAfterCursor: string;
   cachePos: CursorPosition;

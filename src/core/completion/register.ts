@@ -60,7 +60,7 @@ export const registerCompletion = (
   try {
     const inlineCompletionsProvider =
       monaco.languages.registerInlineCompletionsProvider(options.language, {
-        provideInlineCompletions: (mdl, pos, _, token) => {
+        provideInlineCompletions: (mdl, pos, ctx, token) => {
           const state = editorCompletionState.get(editor);
 
           if (!state) return;
@@ -74,6 +74,7 @@ export const registerCompletion = (
             monaco,
             mdl,
             pos,
+            ctx,
             token,
             isCompletionAccepted: state.isCompletionAccepted,
             onShowCompletion: () => {

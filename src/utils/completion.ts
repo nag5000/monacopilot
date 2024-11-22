@@ -1,11 +1,19 @@
 import {CompletionFormatter} from '../classes';
-import {EditorInlineCompletion, EditorInlineCompletionsResult} from '../types';
+import {
+  EditorInlineCompletion,
+  EditorInlineCompletionsResult,
+  InlineCompletionContext,
+} from '../types';
 
-export const formatCompletion = (completion: string): string => {
+export const formatCompletion = (
+  completion: string,
+  ctx: InlineCompletionContext,
+): string => {
   return CompletionFormatter.create(completion)
     .removeMarkdownCodeSyntax()
     .removeExcessiveNewlines()
     .removeInvalidLineBreaks()
+    .withSelectedSuggestion(ctx.selectedSuggestionInfo)
     .build();
 };
 
