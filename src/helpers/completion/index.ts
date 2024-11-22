@@ -58,9 +58,8 @@ export const constructCompletionMetadata = ({
   mdl,
   options,
 }: ConstructCompletionMetadataParams) => {
-  const {filename, language, technologies, relatedFiles, maxContextLines} =
-    options;
-
+  const {filename, technologies, relatedFiles, maxContextLines} = options;
+  const language = mdl.getLanguageId();
   const completionMode = determineCompletionMode(pos, mdl);
 
   // Determine the divisor based on the presence of related files

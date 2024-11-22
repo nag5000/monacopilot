@@ -4,6 +4,7 @@ import {
   EditorCancellationToken,
   EditorModel,
   EditorRange,
+  LanguageSelector,
   Monaco,
 } from './monaco';
 
@@ -29,9 +30,9 @@ export type RelatedFile = {
 
 export interface RegisterCompletionOptions {
   /**
-   * Language of the current model
+   * Language selector for the completion provider.
    */
-  language: string;
+  language: LanguageSelector;
   /**
    * The API endpoint where you started the completion service.
    */
