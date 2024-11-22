@@ -1,5 +1,5 @@
 import {PUNCTUATIONS} from '../constants';
-import {CursorPosition, EditorModel} from '../types';
+import {CursorPosition, EditorModel, InlineCompletionContext} from '../types';
 import {
   getCharAfterCursor,
   getTextAfterCursorInLine,
@@ -47,5 +47,17 @@ export const isCursorAtStartWithTextAround = (
     pos.column <= 3 &&
     (textAfterCursorInCurrentLine !== '' ||
       textBeforeCursorInCurrentLine !== '')
+  );
+};
+
+export const isSelectedSuggestionMismatched = (
+  mdl: EditorModel,
+  ctx: InlineCompletionContext,
+): boolean => {
+  return (
+    !!ctx.selectedSuggestionInfo &&
+    !ctx.selectedSuggestionInfo.text.startsWith(
+      mdl.getValueInRange(ctx.selectedSuggestionInfo.range),
+    )
   );
 };

@@ -19,6 +19,7 @@ export const mockCompletionMetadata: CompletionMetadata = {
   relatedFiles: [{path: './utils.js', content: 'function test() {}'}],
   textAfterCursor: 'console.log(',
   textBeforeCursor: 'function hello() {',
+  selectedSuggestionText: undefined,
   editorState: {
     completionMode: 'complete',
   },

@@ -1,3 +1,5 @@
+import {SelectedSuggestionInfo} from '../types';
+
 /**
  * This class is responsible for formatting code completions
  * to ensure that they are displayed correctly in the editor.
@@ -41,7 +43,7 @@ export class CompletionFormatter {
       result = result.replace(codeBlock, codeContent);
     }
 
-    return result.trim();
+    return result;
   }
 
   public removeExcessiveNewlines(): CompletionFormatter {
@@ -49,6 +51,19 @@ export class CompletionFormatter {
       /\n{3,}/g,
       '\n\n',
     );
+    return this;
+  }
+
+  public withSelectedSuggestion(
+    selectedSuggestionInfo: SelectedSuggestionInfo | undefined,
+  ): CompletionFormatter {
+    if (selectedSuggestionInfo) {
+      const {text, range} = selectedSuggestionInfo;
+      this.formattedCompletion =
+        text.slice(0, range.endColumn - range.startColumn) +
+        this.formattedCompletion;
+    }
+
     return this;
   }
 

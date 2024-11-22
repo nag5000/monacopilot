@@ -15,3 +15,5 @@ export type EditorInlineCompletionsResult =
   monaco.languages.InlineCompletions<monaco.languages.InlineCompletion>;
 export type Disposable = monaco.IDisposable;
 export type LanguageSelector = monaco.languages.LanguageSelector;
+export type InlineCompletionContext = monaco.languages.InlineCompletionContext;
+export type SelectedSuggestionInfo = monaco.languages.SelectedSuggestionInfo;

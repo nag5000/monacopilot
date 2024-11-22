@@ -1,4 +1,10 @@
-import {CursorPosition, EditorModel, EditorRange, Monaco} from '../types';
+import {
+  CursorPosition,
+  EditorModel,
+  EditorRange,
+  InlineCompletionContext,
+  Monaco,
+} from '../types';
 
 export class CompletionRange {
   private monaco: Monaco;
@@ -11,6 +17,7 @@ export class CompletionRange {
     pos: CursorPosition,
     completion: string,
     mdl: EditorModel,
+    ctx: InlineCompletionContext,
   ): EditorRange {
     // Handle empty completion
     if (!completion) {
@@ -20,6 +27,13 @@ export class CompletionRange {
         pos.lineNumber,
         pos.column,
       );
+    }
+
+    // In case Suggestion Widget is open, provided inline completions must extend
+    // the text of the selected item and use the same range, otherwise they will not be shown as preview.
+    // See also https://github.com/microsoft/monaco-editor/discussions/3917.
+    if (ctx.selectedSuggestionInfo) {
+      return ctx.selectedSuggestionInfo.range;
     }
 
     const startOffset = mdl.getOffsetAt(pos);

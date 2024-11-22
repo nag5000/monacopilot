@@ -64,6 +64,7 @@ const handleInlineCompletions = async ({
   monaco,
   mdl,
   pos,
+  ctx,
   token,
   isCompletionAccepted,
   onShowCompletion,
@@ -78,13 +79,13 @@ const handleInlineCompletions = async ({
   } = options;
 
   // Early exit if completions should not be provided
-  if (!new CompletionValidator(pos, mdl).shouldProvideCompletions()) {
+  if (!new CompletionValidator(pos, mdl, ctx).shouldProvideCompletions()) {
     return createInlineCompletionResult([]);
   }
 
   // Attempt to retrieve cached completions if caching is enabled
   if (enableCaching) {
-    const cachedCompletions = completionCache.get(pos, mdl).map(cache => ({
+    const cachedCompletions = completionCache.get(pos, mdl, ctx).map(cache => ({
       insertText: cache.completion,
       range: cache.range,
     }));
@@ -115,6 +116,7 @@ const handleInlineCompletions = async ({
     const completionMetadata: CompletionMetadata = constructCompletionMetadata({
       pos,
       mdl,
+      ctx,
       options,
     });
 
@@ -126,18 +128,20 @@ const handleInlineCompletions = async ({
     });
 
     if (completion) {
-      const formattedCompletion = formatCompletion(completion);
+      const formattedCompletion = formatCompletion(completion, ctx);
       const completionRange = new CompletionRange(monaco);
       const completionInsertionRange = completionRange.computeInsertionRange(
         pos,
         formattedCompletion,
         mdl,
+        ctx,
       );
 
       if (enableCaching) {
         completionCache.add({
           completion: formattedCompletion,
           range: completionInsertionRange,
+          selectedSuggestionInfo: ctx.selectedSuggestionInfo,
           textBeforeCursor: getTextBeforeCursor(pos, mdl),
           textAfterCursor: getTextAfterCursor(pos, mdl),
           cachePos: pos,

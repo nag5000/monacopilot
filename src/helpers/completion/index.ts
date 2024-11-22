@@ -56,6 +56,7 @@ export const fetchCompletionItem = async (
 export const constructCompletionMetadata = ({
   pos,
   mdl,
+  ctx,
   options,
 }: ConstructCompletionMetadataParams) => {
   const {filename, technologies, relatedFiles, maxContextLines} = options;
@@ -117,6 +118,7 @@ export const constructCompletionMetadata = ({
     textBeforeCursor,
     textAfterCursor,
     cursorPosition: pos,
+    selectedSuggestionText: ctx.selectedSuggestionInfo?.text,
     editorState: {
       completionMode,
     },

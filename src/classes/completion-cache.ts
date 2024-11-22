@@ -1,4 +1,9 @@
-import {CompletionCacheItem, CursorPosition, EditorModel} from '../types';
+import {
+  CompletionCacheItem,
+  CursorPosition,
+  EditorModel,
+  InlineCompletionContext,
+} from '../types';
 import {getTextBeforeCursor} from '../utils/editor';
 import {Queue} from './queue';
 
@@ -24,10 +29,11 @@ export class CompletionCache {
   public get(
     pos: Readonly<CursorPosition>,
     mdl: Readonly<EditorModel>,
+    ctx: Readonly<InlineCompletionContext>,
   ): readonly CompletionCacheItem[] {
     return this.cache
       .getAll()
-      .filter(cacheItem => this.isValidCacheItem(cacheItem, pos, mdl));
+      .filter(cacheItem => this.isValidCacheItem(cacheItem, pos, mdl, ctx));
   }
 
   /**
@@ -53,11 +59,17 @@ export class CompletionCache {
     cacheItem: Readonly<CompletionCacheItem>,
     pos: Readonly<CursorPosition>,
     mdl: Readonly<EditorModel>,
+    ctx: Readonly<InlineCompletionContext>,
   ): boolean {
+    const suggestionInfosEqual =
+      cacheItem.selectedSuggestionInfo && ctx.selectedSuggestionInfo
+        ? cacheItem.selectedSuggestionInfo.equals(ctx.selectedSuggestionInfo)
+        : cacheItem.selectedSuggestionInfo === ctx.selectedSuggestionInfo;
     const currentRangeValue = mdl.getValueInRange(cacheItem.range);
     const textBeforeCursor = getTextBeforeCursor(pos, mdl);
 
     return (
+      suggestionInfosEqual &&
       textBeforeCursor.startsWith(cacheItem.textBeforeCursor) &&
       this.isPositionValid(cacheItem, pos, currentRangeValue)
     );
